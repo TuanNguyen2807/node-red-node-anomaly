@@ -1,0 +1,97 @@
+
+<script type="text/javascript">
+  const start = new Date()
+  start.setSeconds(0, 0)
+  const end = new Date(start)
+  end.setMinutes(start.getMinutes() + 1)
+
+  const getTimeStringFromDate = date => `0${date.getHours()}`.slice(-2) + ':' + `0${date.getMinutes()}`.slice(-2) + ':' + `0${date.getSeconds()}`.slice(-2)
+  const getDateFromTimeString = str => new Date(null, null, null, ...str.split(':').map(t => parseInt(t)))
+  const getLabel = function () {
+    if (this.name) return this.name
+
+    if (this.startTime && this.endTime) {
+      const zeroSecs = /:00$/
+      let times = [this.startTime, this.endTime]
+
+      // shorten by removing seconds if both times end with zero seconds
+      if (times.every(t => zeroSecs.test(t))) times = times.map(t => t.replace(zeroSecs, ''))
+
+      return times.join(' - ')
+    }
+
+    return 'time of day'
+  }
+  const isValidTime = function (time) {
+    if (!/^\d\d:\d\d:\d\d$/.test(time)) return false
+    const startTime = $('#node-input-startTime').val() || this.startTime
+    const endTime = $('#node-input-endTime').val() || this.endTime
+    if (!startTime || !endTime) return true
+    return getDateFromTimeString(startTime) < getDateFromTimeString(endTime)
+  }
+    RED.nodes.registerType('anomaly by time', {
+        category: 'mobifone function',
+        color: '#a6bbcf',
+        defaults: {
+            name: {value:""},
+            start: {
+                value: getTimeStringFromDate(start),
+                validate: isValidTime.bind(this)
+            },
+            end: {
+                value: getTimeStringFromDate(end),
+                validate: isValidTime.bind(this)
+            },
+            threshold: {value:""},
+            compare: {value:""},
+            chosenID: {value:""},
+            chosenValue: {value:""},
+            // outputs: { value: 2 }
+        },
+        inputs:1,
+        outputs:1,
+        icon: "icons8-low-volume-24.png",
+        label: function() {
+            return this.name||"anomaly by time";
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="anomaly by time">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Tên</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-start"><i class="fa fa-tag"></i> Thời gian bắt đầu</label>
+        <input  type="time" id="node-input-start" step="1" placeholder="start Time">
+    </div>
+    <div class="form-row">
+        <label for="node-input-end"><i class="fa fa-tag"></i> Thời gian kết thúc</label>
+        <input type="time" id="node-input-end" step="1" placeholder="end Time">
+    </div>
+    <div class="form-row">
+        <label for="node-input-chosenID"><i class="fa fa-tag"></i> ID</label>
+        <input type="text" id="node-input-chosenID" placeholder="ID">
+    </div>
+    <div class="form-row">
+        <label for="node-input-chosenValue"><i class="fa fa-tag"></i> Giá trị</label>
+        <input type="text" id="node-input-chosenValue" placeholder="Value">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-threshold"><i class="fa fa-tag"></i> Ngưỡng</label>
+        <select id="node-input-compare" style="width:100px">
+<!--             <option value="eq">==</option> -->
+            <option value="gt">></option>
+<!--             <option value="gte">>=</option>
+            <option value="lt"><</option> -->
+            <option value="lte"><=</option>
+        </select>
+        <input type="text" id="node-input-threshold" style="width:225px" placeholder="Threshold">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="anomaly by time">
+    <p>Check threshold according to time</p>
+</script>

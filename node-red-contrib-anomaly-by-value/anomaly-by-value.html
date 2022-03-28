@@ -1,0 +1,49 @@
+<script type="text/javascript">
+    RED.nodes.registerType('anomaly by value', {
+        category: 'mobifone function',
+        color: '#a6bbcf',
+        defaults: {
+            name: {value:""},
+            threshold: {value:""},
+            compare: {value:""},
+            chosenID: {value:""},
+            chosenValue: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "temp.png",
+        label: function() {
+            return this.name||"anomaly by value";
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="anomaly by value">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Tên</label>
+        <input type="text" id="node-input-name" placeholder="Tên">
+    </div>
+    <div class="form-row">
+        <label for="node-input-chosenID"><i class="fa fa-tag"></i> ID</label>
+        <input type="text" id="node-input-chosenID" placeholder="ID">
+    </div>
+    <div class="form-row">
+        <label for="node-input-chosenValue"><i class="fa fa-tag"></i> Giá trị</label>
+        <input type="text" id="node-input-chosenValue" placeholder="Giá trị">
+    </div>
+    <div class="form-row">
+        <label for="node-input-threshold"><i class="fa fa-tag"></i> Ngưỡng</label>
+        <select id="node-input-compare" style="width:100px">
+<!--             <option value="eq">==</option> -->
+            <option value="gt">></option>
+<!--             <option value="gte">>=</option>
+            <option value="lt"><</option> -->
+            <option value="lte"><=</option>
+        </select>
+        <input type="text" id="node-input-threshold" style="width:225px" placeholder="Ngưỡng">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="anomaly by value">
+    <p>Check threshold according to value</p>
+</script>
