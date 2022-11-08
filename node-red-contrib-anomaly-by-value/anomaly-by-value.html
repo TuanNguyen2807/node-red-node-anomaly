@@ -1,6 +1,6 @@
 <script type="text/javascript">
-    RED.nodes.registerType('anomaly by value', {
-        category: 'mobifone function',
+    RED.nodes.registerType('value', {
+        category: 'custom function',
         color: '#a6bbcf',
         defaults: {
             name: {value:""},
@@ -11,14 +11,14 @@
         },
         inputs:1,
         outputs:1,
-        icon: "temp.png",
+        icon: "file.png",
         label: function() {
-            return this.name||"anomaly by value";
+            return this.name||"value";
         },
     });
 </script>
 
-<script type="text/html" data-template-name="anomaly by value">
+<script type="text/html" data-template-name="value">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Tên</label>
         <input type="text" id="node-input-name" placeholder="Tên">
@@ -44,6 +44,6 @@
     </div>
 </script>
 
-<script type="text/html" data-help-name="anomaly by value">
+<script type="text/html" data-help-name="value">
     <p>Check threshold according to value</p>
 </script>

@@ -10,7 +10,7 @@
   "license": "ISC",
   "node-red": {
     "nodes": {
-      "anomaly by value": "anomaly-by-value.js"
+      "value": "anomaly-by-value.js"
     }
   },
   "dependencies": {

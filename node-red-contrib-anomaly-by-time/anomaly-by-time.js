@@ -170,8 +170,16 @@ module.exports = function(RED) {
                 const start = (new Date(now)).setHours(node.startDate.getHours(), node.startDate.getMinutes(), node.startDate.getSeconds(), 0)
                 const end = (new Date(now)).setHours(node.endDate.getHours(), node.endDate.getMinutes(), node.endDate.getSeconds(), 0)
 
-                let expResultID = await jsonata(node.chosenID).evaluate(msg.payload);
-                let expResultValue = await jsonata(node.chosenValue).evaluate(msg.payload);
+                let prefixData = "";
+
+                if (JSON.stringify(msg.payload).startsWith('{')) {
+                    prefixData = "$.";
+                } else {
+                    prefixData = "$";
+                }
+
+                let expResultID = await jsonata(prefixData + node.chosenID).evaluate(msg.payload);
+                let expResultValue = await jsonata(prefixData + node.chosenValue).evaluate(msg.payload);
 
                 if (typeof expResultID  === "object" || 
                     typeof expResultValue === "object") {
@@ -184,7 +192,7 @@ module.exports = function(RED) {
                     node.send(msg);
                     return;
                 } else if (isNaN(Number(expResultValue))) {
-                    msg.payload = "Value muse be a number.";
+                    msg.payload = "Value must be a number.";
                     node.send(msg);
                     return;
                 } else {
@@ -242,5 +250,5 @@ module.exports = function(RED) {
             }
         });
     }
-    RED.nodes.registerType("anomaly by time", CheckNodeAnomalyByTime);
+    RED.nodes.registerType("time", CheckNodeAnomalyByTime);
 }

@@ -104,8 +104,16 @@ module.exports = function(RED) {
                     return;
                 }
 
-                let expResultID = await jsonata(node.chosenID).evaluate(msg.payload);
-                let expResultValue = await jsonata(node.chosenValue).evaluate(msg.payload);
+                let prefixData = "";
+
+                if (JSON.stringify(msg.payload).startsWith('{')) {
+                    prefixData = "$.";
+                } else {
+                    prefixData = "$";
+                }
+
+                let expResultID = await jsonata(prefixData + node.chosenID).evaluate(msg.payload);
+                let expResultValue = await jsonata(prefixData + node.chosenValue).evaluate(msg.payload);
 
                 if (typeof expResultID  === "object" || 
                     typeof expResultValue === "object") {
@@ -133,7 +141,7 @@ module.exports = function(RED) {
                         //     break;
                         case "gt":
                             if(Comparegt(Number(expResultValue), Number(node.threshold))) {
-                                msg.payload = "Loa " + expResultID  + " có nhiệt độ vượt ngưỡng cho phép!";
+                                msg.payload = "Thiết bị " + expResultID + " có giá trị " + node.chosenID + " vượt ngưỡng cho phép!";
                                 node.send(msg);
                             } 
                             // else {
@@ -158,7 +166,7 @@ module.exports = function(RED) {
                         //     break;
                         case "lte":
                             if(Comparelte(Number(expResultValue), Number(node.threshold))) {
-                                msg.payload = "Loa " + expResultID + " có nhiệt độ nhỏ hơn ngưỡng cho phép!";
+                                msg.payload = "Thiết bị " + expResultID + " có giá trị " + node.chosenID + " nhỏ hơn ngưỡng cho phép!";
                                 node.send(msg);
                             } 
                             // else {
@@ -168,9 +176,9 @@ module.exports = function(RED) {
                     }
                 }
             } catch (error) {
-                console.log("ERRORRRRRRRRR", error);
+                console.log("Error: ", error);
             }
         });
     }
-    RED.nodes.registerType("anomaly by value", CheckNodeAnomalyByValue);
+    RED.nodes.registerType("value", CheckNodeAnomalyByValue);
 }
